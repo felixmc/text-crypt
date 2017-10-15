@@ -149,7 +149,7 @@ class TextCrypt extends Component {
       >
         <br/>
         <Spin size="large" />
-        <br/>        <br/>
+        <br/><br/>
       </Modal>
     )
   }

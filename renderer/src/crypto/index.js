@@ -2,11 +2,11 @@ import openpgp, { key, message } from 'openpgp'
 import fs from 'fs'
 import path from 'path'
 
-// this is teribad,
-const root = './'
+openpgp.initWorker()
+
 const paths = {
-  pub: path.join(root, 'pgp_key.pub'),
-  priv: path.join(root, 'pgp_key'),
+  pub: './pgp_key.pub',
+  priv: './pgp_key',
 }
 
 export const passphrase = 'super long and hard to guess secret'

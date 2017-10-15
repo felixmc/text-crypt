@@ -1,4 +1,6 @@
 const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+
 const { entries } = require('./bundles')
 
 module.exports = {
@@ -22,8 +24,14 @@ module.exports = {
     extensions: ['*', '.js'],
   },
   output: {
-    path: path.join(__dirname, './public/bundles'),
+    path: path.join(__dirname, './public'),
     publicPath: '/',
     filename: '[name].js',
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: path.join(__dirname, '../node_modules/openpgp/dist/openpgp.js') },
+      { from: path.join(__dirname, '../node_modules/openpgp/dist/openpgp.worker.js') },
+    ])
+  ],
 }
