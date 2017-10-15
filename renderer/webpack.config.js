@@ -1,27 +1,29 @@
 const path = require('path')
+const { entries } = require('./bundles')
 
 module.exports = {
+  context: path.join(__dirname, '/src'),
   target: 'electron',
-  entry: path.join(__dirname, './client/index.js'),
+  entry: entries,
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
       },
       {
         test: /\.css$/,
         loader: 'style-loader!css-loader',
       },
-    ]
+    ],
   },
   resolve: {
-    extensions: ['*', '.js']
+    extensions: ['*', '.js'],
   },
   output: {
-    path: path.join(__dirname, './build'),
+    path: path.join(__dirname, './public/bundles'),
     publicPath: '/',
-    filename: 'client.js'
+    filename: '[name].js',
   },
 }

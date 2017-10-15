@@ -1,12 +1,20 @@
 import openpgp, { key, message } from 'openpgp'
 import fs from 'fs'
+import path from 'path'
+
+// this is teribad,
+const root = './'
+const paths = {
+  pub: path.join(root, 'pgp_key.pub'),
+  priv: path.join(root, 'pgp_key'),
+}
 
 export const passphrase = 'super long and hard to guess secret'
 
 export function loadKeys () {
   return {
-    pubKey: key.readArmored(fs.readFileSync('pgp_key.pub', 'utf8')).keys[0],
-    privKey: key.readArmored(fs.readFileSync('pgp_key', 'utf8')).keys[0],
+    pubKey: key.readArmored(fs.readFileSync(paths.pub, 'utf8')).keys[0],
+    privKey: key.readArmored(fs.readFileSync(paths.priv, 'utf8')).keys[0],
   }
 }
 
