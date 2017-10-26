@@ -4,95 +4,62 @@ import path from 'path'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
-import AceEditor from 'react-ace'
-require('brace/keybinding/emacs')
-require('brace/mode/markdown')
-
-require('brace/ext/language_tools')
-require('brace/ext/statusbar')
-
-// require('./my_theme')
-
-const themes = [ 'ambiance',
-  'chaos',
-  'chrome',
-  'clouds',
-  'clouds_midnight',
-  'cobalt',
-  'crimson_editor',
-  'dawn',
-  'dreamweaver',
-  'eclipse',
-  'github',
-  'idle_fingers',
-  'iplastic',
-  'katzenmilch',
-  'kr_theme',
-  'kuroir',
-  'merbivore',
-  'merbivore_soft',
-  'mono_industrial',
-  'monokai',
-  'pastel_on_dark',
-  'solarized_dark',
-  'solarized_light',
-  'sqlserver',
-  'terminal',
-  'textmate',
-  'tomorrow',
-  'tomorrow_night',
-  'tomorrow_night_blue',
-  'tomorrow_night_bright',
-  'tomorrow_night_eighties',
-  'twilight',
-  'vibrant_ink',
-  'xcode' ]
-
-themes.forEach(theme => require(`brace/theme/${theme}`))
-
 import { Input, Spin, Layout, Menu, Icon, Modal, notification } from 'antd'
 const { TextArea } = Input
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
 
+import TextEditor from './components/TextEditor'
+
 import 'antd/dist/antd.css'
 import './style.css'
 
-const ipcRenderer = require('electron').ipcRenderer
+import { remote, ipcRenderer } from 'electron'
+// const ipcRenderer = require('electron').ipcRenderer
 
 import { passphrase, loadKeys, encrypt, decrypt } from '../crypto'
 const keys = loadKeys()
 
-
-let unsavedText = ''
-
-class TextCrypt extends Component {
+class FileEditor extends Component {
   state = {
-    status: {
-      text: '',
-    },
     savedText: '',
-    unsavedText: '',
     filePath: null,
     isLoading: false,
-    theme: 'pastel_on_dark',
+    isSaving: false,
   }
 
   componentDidMount () {
     ipcRenderer.on('file-open', (sender, files) => {
-      this.openFile(files[0])
+      if (files.length) {
+        this.openFile(files[0])
+      }
     })
 
     ipcRenderer.on('file-save', (sender) => {
-      this.saveFile()
+      console.log('file save')
+      debugger
+      if (!this.state.filePath) {
+        remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+          title: 'Save File',
+          defaultPath: process.cwd(),
+          buttonLabel: 'Save',
+          filters: [{ name: 'TextCrypt Files', extensions: ['txc'] }],
+        }, (filePath) => {
+          this.setState({ filePath }, () => {
+            this.saveFile()
+          })
+        })
+      } else {
+        this.saveFile()
+      }
     })
   }
 
-  onTextChange = (text) => {
-    unsavedText = text
-    // this.setState({ unsavedText: text })
-    // return text
-  }
+  // onTextChange () {
+  //   this.setState({
+  //     hasChanges: this.textEditor.value !== this.savedText,
+  //   })
+  // }
 
   openFile (filePath) {
     console.log('loading raw data..')
@@ -116,24 +83,22 @@ class TextCrypt extends Component {
   }
 
   saveFile () {
-    if (!this.state.filePath) return;
-    console.log('saving data..')
-    // this.setState({ isLoading: true }, () )
-    encrypt(unsavedText, keys, passphrase)
+    const hasChanges = this.textEditor.value !== this.savedText
+    if (!this.state.filePath || !hasChanges) return;
+    this.setState({ isSaving: true })
+    const text = this.textEditor.value
+    encrypt(text, keys, passphrase)
     .then(cyphertext => {
       console.log('data encrypted')
       fs.writeFileSync(this.state.filePath, cyphertext)
-      // this.setState({ unsavedText: '', savedText: this.state.unsavedText })
-      // this.setState({ isLoading: false })
       notification.success({
         message: 'Save Successful!'
       })
+      this.setState({
+        isSaving: false,
+        savedText: text,
+      })
     })
-  }
-
-  onLoad = (editor) => {
-    editor.focus()
-    editor.getSession().setUseWrapMode(true)
   }
 
   renderModal () {
@@ -145,7 +110,7 @@ class TextCrypt extends Component {
         width={150}
         wrapClassName="vertical-center-modal"
         style={{textAlign: 'center'}}
-        visible={this.state.isLoading}
+        visible={this.state.isLoading || this.state.isSaving}
       >
         <br/>
         <Spin size="large" />
@@ -159,35 +124,6 @@ class TextCrypt extends Component {
       <Menu.Item key="6"><Icon type="file-text" />hello_world.txc</Menu.Item>,
       <Menu.Item key="7"><Icon type="file-text" />foobar.txc</Menu.Item>
     ]
-  }
-
-  renderContent () {
-    if (this.state.isLoading) return null
-
-    return (
-      <AceEditor
-        ref={(c) => { global.editor = c }}
-        mode="markdown"
-        theme={this.state.theme}
-        name="editor"
-        onLoad={this.onLoad}
-        onChange={this.onTextChange}
-        fontSize={15}
-        showPrintMargin={false}
-        defaultValue={this.state.savedText}
-        width=""
-        height=""
-        keyboardHandler="emacs"
-        style={{ flex: 1 }}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: false,
-          enableSnippets: false,
-          showLineNumbers: true,
-          tabSize: 2,
-        }}
-      />
-    )
   }
 
   render () {
@@ -206,7 +142,13 @@ class TextCrypt extends Component {
         <div style={{WebkitAppRegion: 'drag',background:'#2C2828',height:'30px'}}></div>
         <Layout>
           <Content className="content">
-            {this.renderContent()}
+            {(this.state.isLoading) ||
+              <TextEditor
+                ref={(c) => { this.textEditor = c; global.textEditor = c }}
+                defaultText={this.state.savedText}
+                onChange={this.onTextChange}
+                readOnly={this.state.isSaving}
+              />}
           </Content>
           <Footer className="status-bar">
             <span className="filename">{this.state.filePath || 'unsaved'}</span>
@@ -218,4 +160,4 @@ class TextCrypt extends Component {
   }
 }
 
-global.app = ReactDOM.render(<TextCrypt />, document.querySelector('#app'))
+global.app = ReactDOM.render(<FileEditor />, document.querySelector('#app'))

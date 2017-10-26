@@ -1,5 +1,5 @@
 {
-  "name": "text-crypt",
+  "name": "TextCrypt",
   "version": "1.0.0",
   "description": "A minimal encrypted text editor",
   "main": "main/index.js",
@@ -36,6 +36,7 @@
     "electron-localshortcut": "^2.0.2",
     "mousetrap": "^1.6.1",
     "openpgp": "^2.5.11",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-ace": "^5.2.1",
     "react-dom": "^16.0.0"

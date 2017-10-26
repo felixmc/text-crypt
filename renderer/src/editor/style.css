@@ -22,29 +22,3 @@ body {
   padding: 10px 20px;
   color: #bbb;
 }
-
-.emacs-mode div.ace_cursor {
-  border-color: red !important;
-  background-color: rgba(255,0,0,.3) !important;
-}
-
-div.ace_editor.ace_autocomplete {
-  background: #353030;
-  color: #8b8f8b;
-  box-shadow: none;
-  border: none;
-  line-height: 1.8;
-}
-
-div.ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
-  background-color: #753d3d;
-}
-
-div.ace_editor.ace_autocomplete .ace_completion-highlight {
-  color: #ff5656;
-}
-
-
-div.ace_editor.ace_autocomplete .ace_rightAlignedText {
-  opacity: 0;
-}

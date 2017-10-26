@@ -29,6 +29,7 @@ export function decrypt (data, keys, passphrase) {
 }
 
 export function encrypt (data, keys, passphrase) {
+  console.log('encryptin them mothafakas')
   keys.privKey.decrypt(passphrase)
 
   return openpgp.encrypt({
