@@ -1,3 +1,4 @@
+import React from 'react'
 import ReactDOM from 'react-dom'
 import FileEditor from '../file-editor'
 
@@ -22,6 +23,9 @@ const editor = {
   update, initialize
 }
 
-console.log('editor', editor)
+// console.log('editor >>', editor)
+
+// SUPER HACKYYYYYYY -- gotta figure out why requiring won't work :(
+window.onAppReady(editor)
 
 export default editor

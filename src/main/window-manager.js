@@ -17,13 +17,15 @@ function composeBundle (entry) {
 const windows = {}
 function createWindow (type, options) {
   const win = new BrowserWindow(options)
+  const id = win.id // store id because win gets garbage collected by the time it hits onClosed
   windows[win.id] = {
     type,
     instance: win,
   }
+
   win.loadURL(composeBundle(type))
   win.on('closed', () => {
-    delete windows[win.id]
+    delete windows[id]
   })
 
   return win

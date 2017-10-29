@@ -24,7 +24,7 @@ const keys = loadKeys()
 
 // export const passphrase = 'super long and hard to guess secret'
 
-class FileEditor extends Component {
+export default class FileEditor extends Component {
   state = {
     savedText: '',
     filePath: null,
