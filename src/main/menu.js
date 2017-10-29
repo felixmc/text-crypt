@@ -3,11 +3,11 @@ const defaultMenu = require('electron-default-menu')
 
 const menu = defaultMenu(app, shell)
 
-console.log(menu)
+
 
 // menu[0].label = 'TextCrypt'
 
-
+// console.log(menu)
 
 menu.splice(1, 0, {
   label: 'File',

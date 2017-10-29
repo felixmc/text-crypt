@@ -6,8 +6,7 @@ minimal editor for pgp-encrypted text files.
 ## Development
 
 1. Build the renderer: `yarn build:renderer`
-2. Start web server: `yarn start:server`
-3. Start main process: `yarn start:main`
+2. Start main process: `yarn start:main`
 
 
 ## License

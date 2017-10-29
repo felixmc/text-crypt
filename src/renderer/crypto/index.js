@@ -9,10 +9,9 @@ const paths = {
   priv: './pgp_key',
 }
 
-export const passphrase = 'super long and hard to guess secret'
-
 export function loadKeys () {
   return {
+    name: path.resolve(paths.priv),
     pubKey: key.readArmored(fs.readFileSync(paths.pub, 'utf8')).keys[0],
     privKey: key.readArmored(fs.readFileSync(paths.priv, 'utf8')).keys[0],
   }

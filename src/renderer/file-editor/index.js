@@ -1,24 +1,28 @@
 import fs from 'fs'
 import path from 'path'
 
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import { remote, ipcRenderer } from 'electron'
 
-import { Input, Spin, Layout, Menu, Icon, Modal, notification } from 'antd'
+import React, { Component } from 'react'
+// import ReactDOM from 'react-dom'
+
+import { Input, Spin, Layout, Menu, Icon, Modal, notification, message } from 'antd'
 const { TextArea } = Input
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
 
-import TextEditor from './components/TextEditor'
+import TextEditor from './components/text-editor'
+import promptPass from '../crypto/components/pass-prompt'
 
-import 'antd/dist/antd.css'
+window.promptPass = promptPass
+
+import 'antd/dist/antd.less'
 import './style.css'
 
-import { remote, ipcRenderer } from 'electron'
-// const ipcRenderer = require('electron').ipcRenderer
-
-import { passphrase, loadKeys, encrypt, decrypt } from '../crypto'
+import { loadKeys, encrypt, decrypt } from '../crypto'
 const keys = loadKeys()
+
+// export const passphrase = 'super long and hard to guess secret'
 
 class FileEditor extends Component {
   state = {
@@ -36,8 +40,6 @@ class FileEditor extends Component {
     })
 
     ipcRenderer.on('file-save', (sender) => {
-      console.log('file save')
-      debugger
       if (!this.state.filePath) {
         remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
           title: 'Save File',
@@ -55,68 +57,50 @@ class FileEditor extends Component {
     })
   }
 
-  // onTextChange () {
-  //   this.setState({
-  //     hasChanges: this.textEditor.value !== this.savedText,
-  //   })
-  // }
-
   openFile (filePath) {
-    console.log('loading raw data..')
     this.setState({ filePath, isLoading: true })
     const text = fs.readFileSync(filePath, 'utf8')
 
-    Promise.resolve(text)
-      .then(text => {
+    promptPass({ keyName: keys.name })
+      .then(passphrase => ({
+        passphrase,
+        text,
+      }))
+      .then(({ text, passphrase }) => {
         if (text.length) {
-          console.log('decrypting', text)
           return decrypt(text, keys, passphrase)
         } else {
           return text
         }
       })
       .then(cleartext => {
-        console.log('loading text', cleartext)
         this.setState({ savedText: cleartext, isLoading: false })
       })
-      .catch(e => console.log('stuff failed', e))
+      .catch(e => {
+        console.error('Opening file failed', e)
+        message.warning('Open failed')
+      })
   }
 
   saveFile () {
     const hasChanges = this.textEditor.value !== this.savedText
     if (!this.state.filePath || !hasChanges) return;
+    message.loading('Saving..')
     this.setState({ isSaving: true })
     const text = this.textEditor.value
     encrypt(text, keys, passphrase)
     .then(cyphertext => {
-      console.log('data encrypted')
       fs.writeFileSync(this.state.filePath, cyphertext)
-      notification.success({
-        message: 'Save Successful!'
-      })
+      message.success('Save successful')
       this.setState({
         isSaving: false,
         savedText: text,
       })
     })
-  }
-
-  renderModal () {
-    return (
-      <Modal
-        title={null}
-        closable={false}
-        footer={null}
-        width={150}
-        wrapClassName="vertical-center-modal"
-        style={{textAlign: 'center'}}
-        visible={this.state.isLoading || this.state.isSaving}
-      >
-        <br/>
-        <Spin size="large" />
-        <br/><br/>
-      </Modal>
-    )
+    .catch(e => {
+      console.error('saving file failed', e)
+      message.error('Save failed')
+    })
   }
 
   renderMenuItems () {
@@ -154,10 +138,7 @@ class FileEditor extends Component {
             <span className="filename">{this.state.filePath || 'unsaved'}</span>
           </Footer>
         </Layout>
-        {this.renderModal()}
       </Layout>
     )
   }
 }
-
-global.app = ReactDOM.render(<FileEditor />, document.querySelector('#app'))
