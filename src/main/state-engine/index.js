@@ -1,14 +1,12 @@
-const { bindActionCreators } = require('redux')
-
+const { bindActionCreators, combineReducers } = require('redux')
 const createStore = require('./store')
-const actions = require('./actions')
 
-const reducers = {
-  windows: (res, state) => state || {},
-}
+const ModuleCollector = require('./module-collector')
+const modules = ['windows', 'buffers', 'keys', 'editors']
+const { actions, reducer, sagas } = ModuleCollector.parseModules(modules, './')
 
-const sagas = {}
-const store = createStore(reducers, sagas)
+const rootReducer = combineReducers(reducer)
+const store = createStore(rootReducer, sagas)
 
 const StateEngine = {
   store,

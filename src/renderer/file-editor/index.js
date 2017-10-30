@@ -2,11 +2,8 @@ import fs from 'fs'
 import path from 'path'
 
 import { remote, ipcRenderer } from 'electron'
-
 import React, { Component } from 'react'
-// import ReactDOM from 'react-dom'
-
-import { Input, Spin, Layout, Menu, Icon, Modal, notification, message } from 'antd'
+import { Input, Spin, Layout, Menu, Icon, Modal, message } from 'antd'
 const { TextArea } = Input
 const { Header, Footer, Sider, Content } = Layout
 const { SubMenu } = Menu
@@ -111,16 +108,6 @@ export default class FileEditor extends Component {
   }
 
   render () {
-          // <Header>Header</Header>
-          // <Sider>
-          //   <Menu
-          //     mode="inline"
-          //     defaultSelectedKeys={['1']}
-          //     style={{ height: '100%', borderRight: 0 }}
-          //   >
-          //     {this.renderMenuItems()}
-          //   </Menu>
-          // </Sider>
     return (
       <Layout>
         <div style={{WebkitAppRegion: 'drag',background:'#2C2828',height:'30px'}}></div>

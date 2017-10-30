@@ -1,6 +1,3 @@
-// const path = require('path')
-// const url = require('url')
-
 const app = require('./app')
 
 const WindowManager = require('./window-manager')
