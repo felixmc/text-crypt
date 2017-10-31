@@ -1,4 +1,25 @@
+const { select, takeEvery, put } = require('redux-saga/effects')
+const uuidv4 = require('uuid/v4')
 
+const actions = require('./actions')
+const { createWindow, windowCreated } = require('../windows/actions')
 
+const options = { width: 900, height: 750, titleBarStyle: 'hidden' }
 
-module.exports = {}
+function* createEditor (action) {
+  yield put(createWindow({ type: 'editor', options }))
+}
+
+exports.onCreateEditor = function* onCreateEditor () {
+  yield takeEvery(actions.createEditor.toString(), createEditor)
+}
+
+function* onWindowCreated (action) {
+  if (action.payload.type === 'editor') {
+    yield put(actions.editorCreated({ id: uuidv4(), windowId: action.payload.id }))
+  }
+}
+
+exports.onEditorWindowCreated = function* onEditorWindowCreated () {
+  yield takeEvery(windowCreated.toString(), onWindowCreated)
+}

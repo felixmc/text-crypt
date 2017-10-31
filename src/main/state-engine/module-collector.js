@@ -1,13 +1,13 @@
 function tryRequire (module) {
-  console.log('MODULE',module)
   try {
     return require(`./${module}`)
   } catch (e) {
+    // console.log('error:', e)
     return null
   }
 }
 
-const collections = ['actions', 'reducer', 'sagas']
+const collections = ['actions', 'reducer', 'sagas', 'selectors']
 
 function parseModules (modules, context) {
   const data = collections.reduce((map, col) => {
@@ -17,7 +17,7 @@ function parseModules (modules, context) {
 
   modules.forEach((mod) => {
     collections.forEach((col) => {
-      const module = tryRequire(`${context}/${mod}/${col}`)
+      const module = tryRequire(`${context}${mod}/${col}`)
       if (module) {
         data[col] = Object.assign(data[col], module)
       }

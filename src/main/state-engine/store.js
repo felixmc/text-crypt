@@ -11,9 +11,7 @@ module.exports = function create (reducers, sagas) {
     applyMiddleware(sagaMiddleware, logger)
   )
 
-  for (const saga in sagas) {
-    sagaMiddleware.run(saga)
-  }
+  Object.keys(sagas).forEach(saga => sagaMiddleware.run(sagas[saga]))
 
   return store
 }
