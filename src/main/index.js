@@ -2,7 +2,7 @@ const app = require('./app')
 const StateEngine = require('./state-engine')
 
 StateEngine.store.subscribe(() => {
-  console.log('State Changed!')
+  // TODO: run window selectors and dispatch state update ?
 })
 
 function activateWindow () {

@@ -7,7 +7,7 @@ const { createWindow, windowCreated } = require('../windows/actions')
 const options = { width: 900, height: 750, titleBarStyle: 'hidden' }
 
 function* createEditor (action) {
-  yield put(createWindow({ type: 'editor', options }))
+  yield put(createWindow({ bundle: 'editor', options, callback: { type: actions.editorCreated, payload: { id: uuidv4() } } }))
 }
 
 exports.onCreateEditor = function* onCreateEditor () {
@@ -15,7 +15,7 @@ exports.onCreateEditor = function* onCreateEditor () {
 }
 
 function* onWindowCreated (action) {
-  if (action.payload.type === 'editor') {
+  if (action.payload.bundle === 'editor') {
     yield put(actions.editorCreated({ id: uuidv4(), windowId: action.payload.id }))
   }
 }
