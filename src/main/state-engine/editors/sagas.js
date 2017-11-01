@@ -14,12 +14,12 @@ exports.onCreateEditor = function* onCreateEditor () {
   yield takeEvery(actions.createEditor.toString(), createEditor)
 }
 
-function* onWindowCreated (action) {
-  if (action.payload.bundle === 'editor') {
-    yield put(actions.editorCreated({ id: uuidv4(), windowId: action.payload.id }))
-  }
-}
-
-exports.onEditorWindowCreated = function* onEditorWindowCreated () {
-  yield takeEvery(windowCreated.toString(), onWindowCreated)
-}
+// function* onWindowCreated (action) {
+//   if (action.payload.bundle === 'editor') {
+//     yield put(actions.editorCreated({ id: uuidv4(), windowId: action.payload.id }))
+//   }
+// }
+//
+// exports.onEditorWindowCreated = function* onEditorWindowCreated () {
+//   yield takeEvery(windowCreated.toString(), onWindowCreated)
+// }
