@@ -6,20 +6,23 @@ const identity = (defaultState) => (state = defaultState) => state
 
 const reduceWindow = combineReducers({
   id: identity(null),
+  electronId: handleActions({
+    [actions.windowCreated.toString()]: (state, action) => action.payload.electronId,
+  }, null),
   bundle: identity(null),
   state: handleActions({
-    // [actions.windowCreated.toString()]: () => 'READY',
+    [actions.windowCreated.toString()]: () => 'READY',
     [actions.windowClosed.toString()]: () => 'CLOSED',
   }, null),
 })
 
 const reduceWindowList = handleActions({
-  [actions.windowCreated.toString()]: (state, { payload }) => {
+  [actions.createWindow.toString()]: (state, { payload }) => {
     return Object.assign({
       [payload.id]: {
         id: payload.id,
         bundle: payload.bundle,
-        state: 'READY',
+        state: 'REQUESTED',
       },
     }, state)
   },

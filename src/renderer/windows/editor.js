@@ -7,7 +7,7 @@ let root = null
 function render (props) {
   ReactDOM.render(
     <FileEditor {...props} />
-  , root)
+    , root)
 }
 
 function update (state) {
@@ -20,10 +20,8 @@ function initialize (state, node) {
 }
 
 const editor = {
-  update, initialize
+  update, initialize,
 }
-
-// console.log('editor >>', editor)
 
 // SUPER HACKYYYYYYY -- gotta figure out why requiring won't work :(
 window.onAppReady(editor)

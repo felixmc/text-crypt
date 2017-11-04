@@ -14,11 +14,12 @@ module.exports = function createMenu (StateEngine) {
       {
         label: 'Open',
         accelerator: 'CommandOrControl+O',
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('file-open', dialog.showOpenDialog({
-          defaultPath: process.cwd(),
-          properties: ['openFile'],
-          filters: [{ name: 'TextCrypt Files', extensions: ['txc'] }],
-        })),
+        click: () => StateEngine.actions.openToEditor(),
+        // click: () => BrowserWindow.getFocusedWindow().webContents.send('file-open', dialog.showOpenDialog({
+        //   defaultPath: process.cwd(),
+        //   properties: ['openFile'],
+        //   filters: [{ name: 'TextCrypt Files', extensions: ['txc'] }],
+        // })),
       },
       {
         label: 'Save',

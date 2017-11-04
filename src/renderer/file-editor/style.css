@@ -22,3 +22,9 @@ body {
   padding: 10px 20px;
   color: #bbb;
 }
+
+.titlebar {
+  -webkit-app-region: 'drag';
+  background: #2C2828;
+  height: 30px;
+}

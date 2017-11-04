@@ -1,6 +1,6 @@
-import openpgp, { key, message } from 'openpgp'
-import fs from 'fs'
-import path from 'path'
+const openpgp = { key, message } = require('openpgp')
+const fs = require('fs')
+const path = require('path')
 
 openpgp.initWorker()
 
@@ -9,7 +9,7 @@ const paths = {
   priv: './pgp_key',
 }
 
-export function loadKeys () {
+exports.loadKeys = function loadKeys () {
   return {
     name: path.resolve(paths.priv),
     pubKey: key.readArmored(fs.readFileSync(paths.pub, 'utf8')).keys[0],
@@ -17,9 +17,8 @@ export function loadKeys () {
   }
 }
 
-export function decrypt (data, keys, passphrase) {
+exports.decrypt = function decrypt (data, keys, passphrase) {
   keys.privKey.decrypt(passphrase)
-
   return openpgp.decrypt({
     publicKeys: keys.pubKey,
     privateKey: keys.privKey,
@@ -27,10 +26,8 @@ export function decrypt (data, keys, passphrase) {
   }).then((plaintext) => plaintext.data)
 }
 
-export function encrypt (data, keys, passphrase) {
-  console.log('encryptin them mothafakas')
+exports.encrypt = function encrypt (data, keys, passphrase) {
   keys.privKey.decrypt(passphrase)
-
   return openpgp.encrypt({
     publicKeys: keys.pubKey,
     privateKeys: keys.privKey,

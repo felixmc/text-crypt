@@ -13,7 +13,7 @@ export default class TextEditor extends Component {
   static propTypes = {
     theme: string,
     defaultText: string,
-    onChange: func,
+    // onChange: func,
     readOnly: bool,
   }
 
@@ -45,12 +45,12 @@ export default class TextEditor extends Component {
       <AceEditor
         defaultValue={this.props.defaultText}
         readOnly={this.props.readOnly}
-        mode="markdown"
-        keyboardHandler="emacs"
+        mode='markdown'
+        keyboardHandler='emacs'
         theme={this.props.theme}
         style={{ flex: 1 }}
-        width=""
-        height=""
+        width=''
+        height=''
         fontSize={14}
         showPrintMargin={false}
         onLoad={this.onLoad}

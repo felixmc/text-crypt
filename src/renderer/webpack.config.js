@@ -32,12 +32,12 @@ module.exports = {
         use: [
           { loader: 'style-loader' },
           { loader: 'css-loader' },
-          { loader: 'less-loader' ,
+          { loader: 'less-loader',
             options: {
               modifyVars: themeVariables,
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -55,6 +55,6 @@ module.exports = {
       { from: path.join(rootDir, 'node_modules/openpgp/dist/openpgp.js') },
       { from: path.join(rootDir, 'node_modules/openpgp/dist/openpgp.worker.js') },
       { from: path.join(__dirname, 'index.html') },
-    ])
+    ]),
   ],
 }

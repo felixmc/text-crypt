@@ -1,4 +1,4 @@
-const CONFIG_FILE = '.textcryptrc'
+// const CONFIG_FILE = '.textcryptrc'
 
-const path = require('path')
-const fs = require('fs')
+// const path = require('path')
+// const fs = require('fs')

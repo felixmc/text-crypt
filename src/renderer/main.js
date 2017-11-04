@@ -1,6 +1,6 @@
-import { remote, ipcRenderer } from 'electron'
-
-const appName = location.hash.slice(1)
+import { ipcRenderer } from 'electron'
+// remote,
+const appName = window.location.hash.slice(1)
 console.log('bout to require')
 
 // SUPER HACKYYYYYYY -- gotta figure out why requiring won't work :(

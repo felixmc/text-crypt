@@ -5,7 +5,7 @@ const StateEngine = require('./state-engine')
 const menu = require('./menu')(StateEngine)
 
 // StateEngine.store.subscribe(() => {
-  // TODO: run window selectors and dispatch state update ?
+//   TODO: run window selectors and dispatch state update ?
 // })
 
 function activateWindow () {

@@ -1,12 +1,8 @@
-import fs from 'fs'
-import path from 'path'
-
 import { remote, ipcRenderer } from 'electron'
 import React, { Component } from 'react'
-import { Input, Spin, Layout, Menu, Icon, Modal, message } from 'antd'
-const { TextArea } = Input
-const { Header, Footer, Sider, Content } = Layout
-const { SubMenu } = Menu
+import { Layout, message } from 'antd'
+const { Footer, Content } = Layout
+// const { SubMenu } = Menu
 
 import TextEditor from './components/text-editor'
 import promptPass from '../crypto/components/pass-prompt'
@@ -16,8 +12,7 @@ window.promptPass = promptPass
 import 'antd/dist/antd.less'
 import './style.css'
 
-import { loadKeys, encrypt, decrypt } from '../crypto'
-const keys = loadKeys()
+// import { loadKeys, encrypt, decrypt } from '../crypto'
 
 // export const passphrase = 'super long and hard to guess secret'
 
@@ -54,65 +49,65 @@ export default class FileEditor extends Component {
     })
   }
 
-  openFile (filePath) {
-    this.setState({ filePath, isLoading: true })
-    const text = fs.readFileSync(filePath, 'utf8')
+  // openFile (filePath) {
+  //   this.setState({ filePath, isLoading: true })
+  //   const text = fs.readFileSync(filePath, 'utf8')
 
-    promptPass({ keyName: keys.name })
-      .then(passphrase => ({
-        passphrase,
-        text,
-      }))
-      .then(({ text, passphrase }) => {
-        if (text.length) {
-          return decrypt(text, keys, passphrase)
-        } else {
-          return text
-        }
-      })
-      .then(cleartext => {
-        this.setState({ savedText: cleartext, isLoading: false })
-      })
-      .catch(e => {
-        console.error('Opening file failed', e)
-        message.warning('Open failed')
-      })
-  }
+  //   promptPass({ keyName: keys.name })
+  //     .then(passphrase => ({
+  //       passphrase,
+  //       text,
+  //     }))
+  //     .then(({ text, passphrase }) => {
+  //       if (text.length) {
+  //         return decrypt(text, keys, passphrase)
+  //       } else {
+  //         return text
+  //       }
+  //     })
+  //     .then(cleartext => {
+  //       this.setState({ savedText: cleartext, isLoading: false })
+  //     })
+  //     .catch(e => {
+  //       console.error('Opening file failed', e)
+  //       message.warning('Open failed')
+  //     })
+  // }
 
-  saveFile () {
-    const hasChanges = this.textEditor.value !== this.savedText
-    if (!this.state.filePath || !hasChanges) return;
-    message.loading('Saving..')
-    this.setState({ isSaving: true })
-    const text = this.textEditor.value
-    encrypt(text, keys, passphrase)
-    .then(cyphertext => {
-      fs.writeFileSync(this.state.filePath, cyphertext)
-      message.success('Save successful')
-      this.setState({
-        isSaving: false,
-        savedText: text,
-      })
-    })
-    .catch(e => {
-      console.error('saving file failed', e)
-      message.error('Save failed')
-    })
-  }
+  // saveFile () {
+  //   const hasChanges = this.textEditor.value !== this.savedText
+  //   if (!this.state.filePath || !hasChanges) return
+  //   message.loading('Saving..')
+  //   this.setState({ isSaving: true })
+  //   const text = this.textEditor.value
+  //   encrypt(text, keys, passphrase)
+  //     .then(cyphertext => {
+  //       fs.writeFileSync(this.state.filePath, cyphertext)
+  //       message.success('Save successful')
+  //       this.setState({
+  //         isSaving: false,
+  //         savedText: text,
+  //       })
+  //     })
+  //     .catch(e => {
+  //       console.error('saving file failed', e)
+  //       message.error('Save failed')
+  //     })
+  // }
 
-  renderMenuItems () {
-    return [
-      <Menu.Item key="6"><Icon type="file-text" />hello_world.txc</Menu.Item>,
-      <Menu.Item key="7"><Icon type="file-text" />foobar.txc</Menu.Item>
-    ]
-  }
+  // renderMenuItems () {
+  //   return [
+  //     <Menu.Item key='6'><Icon type='file-text' />hello_world.txc</Menu.Item>,
+  //     <Menu.Item key='7'><Icon type='file-text' />foobar.txc</Menu.Item>,
+  //   ]
+  // }
 
   render () {
     return (
       <Layout>
-        <div style={{WebkitAppRegion: 'drag',background:'#2C2828',height:'30px'}}></div>
+        <div className='titlebar'></div>
         <Layout>
-          <Content className="content">
+          <Content className='content'>
             {(this.state.isLoading) ||
               <TextEditor
                 ref={(c) => { this.textEditor = c; global.textEditor = c }}
@@ -121,8 +116,8 @@ export default class FileEditor extends Component {
                 readOnly={this.state.isSaving}
               />}
           </Content>
-          <Footer className="status-bar">
-            <span className="filename">{this.state.filePath || 'unsaved'}</span>
+          <Footer className='status-bar'>
+            <span className='filename'>{this.state.filePath || 'unsaved'}</span>
           </Footer>
         </Layout>
       </Layout>

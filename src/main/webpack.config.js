@@ -1,4 +1,4 @@
-const webpack = require('webpack')
+// const webpack = require('webpack')
 const path = require('path')
 
 const rootDir = path.join(__dirname, '../../')
@@ -8,15 +8,15 @@ module.exports = {
   entry: {
     main: path.join(__dirname, './index.js'),
   },
-  // module: {
-  //   loaders: [
-  //     {
-  //       test: /\.js$/,
-  //       exclude: /node_modules/,
-  //       loader: 'babel-loader',
-  //     },
-  //   ],
-  // },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+      },
+    ],
+  },
   output: {
     path: path.join(rootDir, 'build'),
     publicPath: '/',
