@@ -15,7 +15,7 @@ const reduceBuffer = combineReducers({
   }, null),
   state: handleActions({
     // [actions.bufferAllocated.toString()]: () => 'ALLOCATED',
-    [actions.bufferCreated.toString()]: () => { console.log('>>>> Buffer Created'); return 'READY' },
+    [actions.bufferCreated.toString()]: () => 'READY',
   }, null),
 })
 
@@ -25,7 +25,6 @@ const reduceBufferList = handleActions({
       [payload.id]: {
         id: payload.id,
         state: 'REQUESTED',
-        windowId: payload.windowId,
       },
     }, state)
   },

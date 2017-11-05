@@ -1,52 +1,65 @@
-import { remote, ipcRenderer } from 'electron'
-import React, { Component } from 'react'
-import { Layout, message } from 'antd'
-const { Footer, Content } = Layout
-// const { SubMenu } = Menu
+// -----@flow
 
-import TextEditor from './components/text-editor'
-import promptPass from '../crypto/components/pass-prompt'
-
-window.promptPass = promptPass
+import React, { PureComponent } from 'react'
+import { string, bool, func } from 'prop-types'
 
 import 'antd/dist/antd.less'
+import { Layout } from 'antd'
+import TextEditor from './components/text-editor'
+
 import './style.css'
 
-// import { loadKeys, encrypt, decrypt } from '../crypto'
+// import promptPass from '../crypto/components/pass-prompt'
+
+// window.promptPass = promptPass
+
+const { Footer, Content } = Layout
 
 // export const passphrase = 'super long and hard to guess secret'
 
-export default class FileEditor extends Component {
-  state = {
-    savedText: '',
+// type Props = {
+//   defaultText: string,
+// }
+
+export default class BufferEditor extends PureComponent {
+  static propTypes = {
+    defaultData: string,
+    filePath: string,
+    isLoading: bool,
+    isSaving: bool,
+    onTextChange: func.isRequired,
+  }
+
+  static defaultProps = {
+    defaultData: '',
     filePath: null,
     isLoading: false,
     isSaving: false,
   }
 
   componentDidMount () {
-    ipcRenderer.on('file-open', (sender, files) => {
-      if (files.length) {
-        this.openFile(files[0])
-      }
-    })
+    // ipcRenderer.on('file-open', (sender, files) => {
+    //   if (files.length) {
+    //     this.openFile(files[0])
+    //   }
+    // })
 
-    ipcRenderer.on('file-save', (sender) => {
-      if (!this.state.filePath) {
-        remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
-          title: 'Save File',
-          defaultPath: process.cwd(),
-          buttonLabel: 'Save',
-          filters: [{ name: 'TextCrypt Files', extensions: ['txc'] }],
-        }, (filePath) => {
-          this.setState({ filePath }, () => {
-            this.saveFile()
-          })
-        })
-      } else {
-        this.saveFile()
-      }
-    })
+    // ipcRenderer.on('file-save', (sender) => {
+    //   if (!this.state.filePath) {
+    //     remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+    //       title: 'Save File',
+    //       defaultPath: process.cwd(),
+    //       buttonLabel: 'Save',
+    //       filters: [{ name: 'TextCrypt Files', extensions: ['txc'] }],
+    //     }, (filePath) => {
+    //       this.setState({ filePath }, () => {
+    //         this.saveFile()
+    //       })
+    //     })
+    //   } else {
+    //     this.saveFile()
+    //   }
+    // })
   }
 
   // openFile (filePath) {
@@ -95,29 +108,26 @@ export default class FileEditor extends Component {
   //     })
   // }
 
-  // renderMenuItems () {
-  //   return [
-  //     <Menu.Item key='6'><Icon type='file-text' />hello_world.txc</Menu.Item>,
-  //     <Menu.Item key='7'><Icon type='file-text' />foobar.txc</Menu.Item>,
-  //   ]
-  // }
+  onTextChange = () => {
+    this.props.onTextChange(this.textEditor.value)
+  }
 
   render () {
     return (
       <Layout>
-        <div className='titlebar'></div>
+        <div className='titlebar' style={{WebkitAppRegion: 'drag'}} />
         <Layout>
           <Content className='content'>
-            {(this.state.isLoading) ||
+            {(this.props.isLoading) ||
               <TextEditor
-                ref={(c) => { this.textEditor = c; global.textEditor = c }}
-                defaultText={this.state.savedText}
+                ref={(c) => { this.textEditor = c }}
+                defaultText={this.props.defaultData}
                 onChange={this.onTextChange}
-                readOnly={this.state.isSaving}
+                readOnly={this.props.isSaving || this.props.isLoading}
               />}
           </Content>
           <Footer className='status-bar'>
-            <span className='filename'>{this.state.filePath || 'unsaved'}</span>
+            <span className='filename'>{this.props.filePath || 'unsaved'}</span>
           </Footer>
         </Layout>
       </Layout>

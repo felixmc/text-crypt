@@ -2,7 +2,9 @@ function tryRequire (module) {
   try {
     return require(`./${module}`)
   } catch (e) {
-    // console.log('error:', e)
+    if (module.includes('subscribers')) {
+      // console.log('error:', e)
+    }
     return null
   }
 }

@@ -11,7 +11,8 @@ const reduceWindow = combineReducers({
   }, null),
   bundle: identity(null),
   state: handleActions({
-    [actions.windowCreated.toString()]: () => 'READY',
+    [actions.windowReady.toString()]: () => 'READY',
+    [actions.windowCreated.toString()]: () => 'ALLOCATED',
     [actions.windowClosed.toString()]: () => 'CLOSED',
   }, null),
 })

@@ -4,8 +4,8 @@
 //   filters: [{ name: 'TextCrypt Files', extensions: ['txc'] }],
 // })),
 
-// const { loadKeys } = require('crypto')
 // const keys = loadKeys()
+// import { loadKeys, encrypt, decrypt } from './crypto'
 
 const { takeEvery, put, call } = require('redux-saga/effects')
 
@@ -16,7 +16,7 @@ function * createBuffer (action) {
     setTimeout(() => resolve(), 1000) // simulate it taking a while to create a buffer to test our editor watch saga
   }))
 
-  yield put(actions.bufferCreated({ targetBuffer: action.payload.id, data: '' }))
+  yield put(actions.bufferCreated({ targetBuffer: action.payload.id, data: 'hello world!' }))
 }
 
 exports.onCreateBuffer = function * onCreateBuffer () {

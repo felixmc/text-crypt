@@ -1,29 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import FileEditor from '../file-editor'
+import BufferEditor from '../buffer-editor'
+import debounce from '../util/debounce'
 
-let root = null
+const TYPE_SAVE_DELAY = 1000
 
-function render (props) {
+// FIXME: gotta figure out why requiring won't work :( so we can stop using globals
+const TextCrypt = window.TextCrypt
+
+function render (props, root) {
   ReactDOM.render(
-    <FileEditor {...props} />
+    <BufferEditor {...props} />
     , root)
 }
 
-function update (state) {
-  render(state)
+function renderTextCrypt () {
+  const state = TextCrypt.getState()
+  const props = Object.assign({
+    onTextChange: debounce(text => {
+      TextCrypt.dispatch('BUFFER_UPDATE', { text })
+    }, TYPE_SAVE_DELAY),
+  }, state)
+  render(props, TextCrypt.getRootNode())
 }
 
-function initialize (state, node) {
-  root = node
-  render(state)
-}
-
-const editor = {
-  update, initialize,
-}
-
-// SUPER HACKYYYYYYY -- gotta figure out why requiring won't work :(
-window.onAppReady(editor)
-
-export default editor
+TextCrypt.subscribe(renderTextCrypt)

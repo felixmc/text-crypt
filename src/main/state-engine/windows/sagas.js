@@ -17,9 +17,9 @@ function watchWindow (win, targetWindow) {
 }
 
 function * createWindow (action) {
-  const { id, bundle, options } = action.payload
+  const { id, options } = action.payload
 
-  const win = makeWindow(bundle, options)
+  const win = makeWindow(id, options)
   yield put(actions.windowCreated({ targetWindow: id, electronId: win.id }))
 
   const windowEventChannel = watchWindow(win, id)

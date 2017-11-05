@@ -5,10 +5,10 @@ const url = require('url')
 
 const buildDir = path.join(__dirname, '../../../../build')
 
-function composeWindowBundle (entry) {
+function composeWindowBundle (id) {
   return url.format({
     pathname: path.join(buildDir, 'renderer/index.html'),
-    hash: entry,
+    hash: id,
     protocol: 'file:',
     slashes: true,
   })

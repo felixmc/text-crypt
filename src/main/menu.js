@@ -1,4 +1,4 @@
-const {Menu, app, shell, dialog, remote, BrowserWindow} = require('electron')
+const {Menu, app, shell, BrowserWindow} = require('electron')
 const defaultMenu = require('electron-default-menu')
 
 module.exports = function createMenu (StateEngine) {

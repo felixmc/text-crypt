@@ -3,10 +3,11 @@ const { takeEvery, put, take, select } = require('redux-saga/effects')
 const actions = require('./actions')
 const { createWindow, windowCreated } = require('../windows/actions')
 const { createBuffer, bufferCreated } = require('../buffers/actions')
+const { createSubscription } = require('../subscribers/actions')
 
 const windowOptions = { width: 900, height: 750, titleBarStyle: 'hidden' }
 
-function * watchAllocatedEditor (action) {
+function * handleAllocatedEditor (action) {
   const { windowId, bufferId, targetEditor } = action.payload
   let ready = false
 
@@ -27,7 +28,7 @@ function * watchAllocatedEditor (action) {
 // editors state for allocated editors and checks on the status of their windows/buffers
 // and marks editors as ready when their dependencies are ready
 exports.onEditorAllocated = function * onEditorAllocated () {
-  yield takeEvery(actions.editorAllocated.toString(), watchAllocatedEditor)
+  yield takeEvery(actions.editorAllocated.toString(), handleAllocatedEditor)
 }
 
 function * createEditor (action) {
@@ -37,9 +38,10 @@ function * createEditor (action) {
   const bufferAction = createBuffer()
   const bufferId = bufferAction.payload.id
 
+  yield put(createSubscription({ windowId, selector: 'getEditorState', args: [action.payload.id] }))
   yield put(windowAction)
   yield put(bufferAction)
-  yield put(actions.editorAllocated({ windowId, bufferId }))
+  yield put(actions.editorAllocated({ windowId, bufferId, targetEditor: action.payload.id }))
 }
 
 exports.onCreateEditor = function * onCreateEditor () {

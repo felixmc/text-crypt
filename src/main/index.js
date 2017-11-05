@@ -1,12 +1,10 @@
 const {Menu, app} = require('electron')
 require('electron-debug')({ showDevTools: true })
 
+const initIpc = require('./ipc-dispatcher')
 const StateEngine = require('./state-engine')
 const menu = require('./menu')(StateEngine)
-
-// StateEngine.store.subscribe(() => {
-//   TODO: run window selectors and dispatch state update ?
-// })
+initIpc(StateEngine)
 
 function activateWindow () {
   // check window manager for windows

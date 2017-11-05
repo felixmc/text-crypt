@@ -13,7 +13,7 @@ export default class TextEditor extends Component {
   static propTypes = {
     theme: string,
     defaultText: string,
-    // onChange: func,
+    onChange: func,
     readOnly: bool,
   }
 
@@ -54,6 +54,7 @@ export default class TextEditor extends Component {
         fontSize={14}
         showPrintMargin={false}
         onLoad={this.onLoad}
+        onChange={this.props.onChange}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: false,

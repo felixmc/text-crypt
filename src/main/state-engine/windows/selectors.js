@@ -1,11 +1,20 @@
 // const { createSelector } = require('reselect')
 
-function findWindowByType (windows, bundle) {
-  return Object.keys(windows).map(id => windows[id])
+function getWindowList (state) {
+  return Object.keys(state.windows).map(id => state.windows[id])
+}
+
+function findWindowByType (state, bundle) {
+  return getWindowList(state)
     .filter(win => win.bundle === bundle && win.state !== 'CLOSED')
     .map(win => win.id)
 }
 
+exports.getActiveWindows = function getActivWindows (state) {
+  return getWindowList(state)
+    .filter(win => win.state === 'READY')
+}
+
 exports.findEditorWindows = function findEditorWindows (state) {
-  return findWindowByType(state.windows, 'editor')
+  return findWindowByType(state, 'editor')
 }
