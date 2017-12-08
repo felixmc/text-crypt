@@ -8,12 +8,19 @@ module.exports = {
   entry: {
     main: path.join(__dirname, './index.js'),
   },
+  externals: {
+    'electron-debug': 'electron-debug',
+    'electron': 'electron',
+  },
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loaders: [
+          'babel-loader',
+          'eslint-loader?emitWarning=true',
+        ],
       },
     ],
   },

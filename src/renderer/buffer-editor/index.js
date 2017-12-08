@@ -10,7 +10,6 @@ import TextEditor from './components/text-editor'
 import './style.css'
 
 // import promptPass from '../crypto/components/pass-prompt'
-
 // window.promptPass = promptPass
 
 const { Footer, Content } = Layout
